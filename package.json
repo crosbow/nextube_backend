@@ -1,0 +1,16 @@
+{
+  "name": "backend_app",
+  "version": "1.0.0",
+  "description": "A professional backend app following by Chai Code",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Backend",
+    "Professional",
+    "Organized"
+  ],
+  "author": "Jubayer Ahmed",
+  "license": "ISC"
+}
