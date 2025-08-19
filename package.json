@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "A professional backend app following by Chai Code",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
   },
   "keywords": [
     "Backend",
@@ -12,5 +14,8 @@
     "Organized"
   ],
   "author": "Jubayer Ahmed",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }
