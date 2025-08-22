@@ -1,6 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-import { ApiError } from "./ApiError.js";
 
 // Configuration
 cloudinary.config({
@@ -12,25 +11,20 @@ cloudinary.config({
 // Main util
 const uploadOnCloudinary = async (localFilePath) => {
   try {
-    if (!localFilePath) {
-      new ApiError(404, "Local file path not found");
-    }
+    if (!localFilePath) return null;
 
     // upload the file on cloudinary
     const response = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "auth",
+      resource_type: "auto",
     });
 
     // uploaded file successfully
-    console.log("cloudinary file uploaded successfully", response.url);
+    // console.log("cloudinary file uploaded successfully", response.url);
+    fs.unlinkSync(localFilePath);
     return response;
   } catch (error) {
     fs.unlinkSync(localFilePath); // remove the locally saved temporary file as the upload operation failed
-    return new ApiError(
-      500,
-      "Cough error while uploading file to Cloudinary:",
-      error
-    );
+    return null;
   }
 };
 

@@ -4,16 +4,16 @@ import { ApiResponse } from "../../utils/ApiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../../utils/cloudinary.js";
 
-const registerUser = asyncHandler(async (req, res) => {
-  // Take user details from frontend - done
-  // Validation - done
-  // Check already exists via - email, username - done
-  // Check files if not empty - avatar - done
-  // Upload file on cloudinary - done
-  // check cloudinary upload err and return
-  // create user object using create entry in DB
-  // Return response except password and refreshToken
+// Take user details from frontend - done
+// Validation - done
+// Check already exists via - email, username - done
+// Check files if not empty - avatar - done
+// Upload file on cloudinary - done
+// check cloudinary upload err and return
+// create user object using create entry in DB
+// Return response except password and refreshToken
 
+const registerUser = asyncHandler(async (req, res) => {
   const { username, email, fullname, password } = req.body;
 
   const emptyField = [username, email, fullname, password].find(
@@ -32,12 +32,29 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, `"User already exist with the username or email"`);
   }
 
-  const avatarLocalFilePath = req.files?.avatar[0]?.path;
-  const coverImageLocalFilePath = req.files?.coverImage[0]?.path;
+  let avatarLocalFilePath;
+  let coverImageLocalFilePath;
+
+  if (
+    req.files &&
+    Array.isArray(req.files.avatar) &&
+    req.files.avatar?.length > 0
+  ) {
+    avatarLocalFilePath = req.files.avatar[0].path;
+  }
+
+  if (
+    req.files &&
+    Array.isArray(req.files.coverImage) &&
+    req.files.coverImage?.length > 0
+  ) {
+    coverImageLocalFilePath = req.files.coverImage[0].path;
+  }
 
   if (!avatarLocalFilePath) {
     throw new ApiError(400, `avatar file is required`);
   }
+  console.log(avatarLocalFilePath);
 
   const avatar = await uploadOnCloudinary(avatarLocalFilePath);
   const coverImage = await uploadOnCloudinary(coverImageLocalFilePath);
@@ -51,8 +68,8 @@ const registerUser = asyncHandler(async (req, res) => {
     fullname,
     email,
     password,
-    avatar: avatar.url,
-    coverImage: coverImage?.url || "",
+    avatar: avatar.secure_url,
+    coverImage: coverImage?.secure_url || "",
   });
 
   const user = await UserModel.findById(createNewUser._id).select(

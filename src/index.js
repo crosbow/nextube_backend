@@ -12,7 +12,7 @@ connectDB()
 
     app.on("error", (err) => {
       console.log("ERROR:", err);
-      throw error;
+      throw err;
     });
   })
   .catch((err) => {
