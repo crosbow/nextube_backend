@@ -2,11 +2,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
-const watchHistory = new mongoose.Schema({
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "Video",
-});
-
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -41,7 +36,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    watchHistories: [watchHistory],
+    watchHistories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Video",
+      },
+    ],
     refreshToken: {
       type: String,
     },
@@ -55,18 +55,18 @@ userSchema.pre("save", async function (next) {
 
   // only hash the password if its not MODIFIED yet
   if (!this.isModified("password")) return next();
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
 // "userSchema" has a "methods" property, which helps to add method (e.g., isPasswordCorrect )
 
 userSchema.methods.isPasswordCorrect = async function (password) {
-  await bcrypt.compare(password, this.password);
+  return await bcrypt.compare(password, this.password);
 };
 
 userSchema.methods.generateAccessToken = function () {
-  jwt.sign(
+  return jwt.sign(
     {
       userId: this._id,
       email: this.email,
@@ -80,11 +80,11 @@ userSchema.methods.generateAccessToken = function () {
   );
 };
 userSchema.methods.generateRefreshToken = function () {
-  jwt.sign(
+  return jwt.sign(
     {
       userId: this._id,
     },
-    process.evn.REFRESH_TOKEN_SECRET,
+    process.env.REFRESH_TOKEN_SECRET,
     {
       expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
     }

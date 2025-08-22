@@ -17,3 +17,13 @@ app.use(express.json({ limit: "16kb" })); // Allows json and limit of the json f
 app.use(express.urlencoded({ extended: true })); // parses incoming URL-encoded form data (like data submitted via HTML forms).
 app.use(express.static("public")); // This serves static files (images, CSS, PDFs, etc.) directly from the public/ folder.
 app.use(cookieParser()); // Allows read cookies sent by the client and also send cookies back.
+
+// import routes
+import authRouter from "./routes/auth.route.js";
+
+// routes declaration
+app.use("/api/v1/auth", authRouter);
+
+// http://localhost:8000/api/v1/auth
+
+export { app };
