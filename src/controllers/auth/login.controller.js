@@ -3,7 +3,7 @@ import { ApiError } from "../../utils/ApiError.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 
-const generateAccessAndRefreshToken = async (userId) => {
+export const generateAccessAndRefreshToken = async (userId) => {
   // get user by userId
   // call access and refresh token methods from user.model.js
   // update user refresh token in database
@@ -42,6 +42,10 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Please provide email or username");
   }
 
+  if (!password) {
+    throw new ApiError(400, "Password is required!");
+  }
+
   const user = await UserModel.findOne({
     $or: [{ username }, { email }],
   });
@@ -75,7 +79,11 @@ const loginUser = asyncHandler(async (req, res) => {
     .cookie("accessToken", accessToken, cookieOptions)
     .cookie("refreshToken", refreshToken, cookieOptions)
     .json(
-      new ApiResponse(200, { user: loggedInUser }, "User loggedIn successfully")
+      new ApiResponse(
+        200,
+        { user: loggedInUser, accessToken, refreshToken },
+        "User loggedIn successfully"
+      )
     );
 });
 

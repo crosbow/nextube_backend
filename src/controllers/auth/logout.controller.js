@@ -11,9 +11,8 @@ const logoutUser = asyncHandler(async (req, res) => {
   await UserModel.findByIdAndUpdate(
     userId,
     {
-      $unset: {
-        // this remove the field from database
-        refreshToken: 1,
+      $set: {
+        refreshToken: null,
       },
     },
     {
@@ -22,14 +21,14 @@ const logoutUser = asyncHandler(async (req, res) => {
   );
 
   const cookiesOptions = {
-    httpOnly: true, // it says only server or HTTP only modify the cookies token
+    httpOnly: true, // it says only server (or HTTP) modify the cookies token
     secure: true,
   };
 
   return res
     .status(200)
-    .clearCookies("accessToken", cookiesOptions)
-    .clearCookies("refreshToken", cookiesOptions)
+    .clearCookie("accessToken", cookiesOptions)
+    .clearCookie("refreshToken", cookiesOptions)
     .json(new ApiResponse(200, {}, "Logged Out successfully"));
 });
 
