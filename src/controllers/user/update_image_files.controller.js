@@ -42,7 +42,7 @@ const UpdateFile = async (req, filename) => {
   const publicId = extractPublicId(oldFileUrl);
 
   const deleteImage = await cloudinary.uploader.destroy(publicId);
-  console.log(deleteImage);
+  // TODO: test all of these -  console.log(deleteImage);
 
   return user;
 };
