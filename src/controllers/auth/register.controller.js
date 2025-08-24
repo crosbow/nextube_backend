@@ -67,8 +67,8 @@ const registerUser = asyncHandler(async (req, res) => {
     fullname,
     email,
     password,
-    avatar: avatar.secure_url,
-    coverImage: coverImage?.secure_url || "",
+    avatar: avatar.url,
+    coverImage: coverImage?.url || "",
   });
 
   const user = await UserModel.findById(createNewUser._id).select(

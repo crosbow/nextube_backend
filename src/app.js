@@ -20,9 +20,11 @@ app.use(cookieParser()); // Allows read cookies sent by the client and also send
 
 // import routes
 import authRouter from "./routes/auth.route.js";
+import userRouter from "./routes/user.route.js";
 
 // routes declaration
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
 
 // http://localhost:8000/api/v1/auth
 
