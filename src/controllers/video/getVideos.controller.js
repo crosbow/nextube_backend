@@ -11,7 +11,7 @@ const getVideos = asyncHandler(async (req, res) => {
     query = "developer"
     sortBy = "createdAt"
     sortType = "desc" || "asc" // asc mean small or last comes first(date) and desc mean big come first, recent date first
-    userId = "45"
+    userId = "45sjhehr"
     */
   /**
      -> Get query params from frontend - page, limit, query, sortBy, sortType, userId 
@@ -45,10 +45,20 @@ const getVideos = asyncHandler(async (req, res) => {
     },
     {
       $match: {
-        title: {
-          $regex: query,
-          $options: "i",
-        },
+        $or: [
+          {
+            title: {
+              $regex: query,
+              $options: "i",
+            },
+          },
+          {
+            description: {
+              $regex: query,
+              $options: "i",
+            },
+          },
+        ],
       },
     },
   ]);
