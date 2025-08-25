@@ -16,5 +16,6 @@ router.route("/change-avatar").patch(upload.single("avatar"), updateAvatar);
 router
   .route("/change-cover-image")
   .patch(upload.single("avatar"), updateCoverImage);
+router.route("/c/:username");
 
 export default router;
