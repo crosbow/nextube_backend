@@ -7,8 +7,6 @@ const removeCloudinaryFile = async (url) => {
     const getPublicIdFromUrl = extractPublicId(url);
     const response = await cloudinary.uploader.destroy(getPublicIdFromUrl);
 
-    console.log(response);
-
     return response;
   } catch (error) {
     throw new ApiError(

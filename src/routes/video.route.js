@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { deleteVideo } from "../controllers/video/delete_video.controller.js";
 import { getVideo } from "../controllers/video/getVideo.controller.js";
 import { getVideos } from "../controllers/video/getVideos.controller.js";
 import { publishVideo } from "../controllers/video/publishVideo.controller.js";
@@ -27,8 +28,8 @@ router.route("/upload").post(
 
 // /watch?videoId=ID
 router.route("/watch").get(verifyJWT, getVideo);
-router.route("/toggle-publish").patch(verifyJWT, togglePublishStatus);
-router.route("/toggle-publish").patch(verifyJWT, togglePublishStatus);
+router.route("/toggle-publish/:videoId").patch(verifyJWT, togglePublishStatus);
+router.route("/delete/:videoId").delete(verifyJWT, deleteVideo);
 router.route("/update-video").patch(verifyJWT, updateVideo);
 
 export default router;
