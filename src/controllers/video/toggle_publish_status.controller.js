@@ -11,15 +11,30 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 
   const { videoId } = req.params;
 
-  await VideoModel.findByIdAndUpdate(videoId, {
-    $set: {
-      isPublished: { $not: "$isPublished" },
-    },
-  });
+  const response = await VideoModel.findByIdAndUpdate(
+    videoId,
+    [
+      {
+        $set: {
+          isPublished: { $not: "$isPublished" },
+        },
+      },
+    ],
+
+    {
+      new: true,
+    }
+  );
 
   return res
     .status(200)
-    .json(new ApiResponse(200, {}, "Toggle publish video status"));
+    .json(
+      new ApiResponse(
+        200,
+        { isPublished: response.isPublished },
+        "Toggle publish video status"
+      )
+    );
 });
 
 export { togglePublishStatus };

@@ -45,18 +45,38 @@ const getVideo = asyncHandler(async (req, res) => {
     {
       $addFields: {
         subscribersCount: {
-          $count: "subscribers",
+          $size: "$subscribers",
         },
         likesCount: {
-          $count: "likes",
+          $size: "$likes",
         },
+      },
+    },
+    {
+      $project: {
+        likesCount: 1,
+        thumbnail: 1,
+        title: 1,
+        description: 1,
+        duration: 1,
+        views: 1,
+        isPublished: 1,
+        subscribersCount: 1,
+        comments: 1,
+        createdAt: 1,
       },
     },
   ]);
 
+  if (!video[0]?.isPublished) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "This video is privet"));
+  }
+
   return res
     .status(200)
-    .json(new ApiResponse(200, video, "video fetched successfully"));
+    .json(new ApiResponse(200, video[0], "video fetched successfully"));
 });
 
 export { getVideo };

@@ -7,6 +7,7 @@ import { removeCloudinaryFile } from "../../utils/removeCloudinaryFile.js";
 
 const updateVideo = asyncHandler(async (req, res) => {
   /**
+      -> get video id from params 
       -> get data frontend to update - title, description, thumbnail
       -> check which one is to update 
       -> if thumbnail is to update then update it and validate - remove old image from cloudinary
@@ -14,40 +15,44 @@ const updateVideo = asyncHandler(async (req, res) => {
       -> return response 
      */
 
-  const { title, description } = req.body;
+  const { videoId } = req.params;
+  const data = req.body;
+  let title = data?.title;
+  let description = data?.description;
 
   const updatableFields = {};
 
-  if (title.trim()) {
+  if (title) {
     updatableFields.title = title;
   }
 
-  if (description.trim()) {
+  if (description) {
     updatableFields.description = description;
   }
 
   const newThumbnailLocalPath = req.file?.path;
 
-  if (!title || !description || !newThumbnailLocalPath) {
+  if (!title && !description && !newThumbnailLocalPath) {
     throw new ApiError(400, "At least one field required");
   }
 
+  let thumbnail;
+
   if (newThumbnailLocalPath) {
     updatableFields.thumbnail = null;
+    thumbnail = await uploadOnCloudinary(newThumbnailLocalPath);
+
+    if (!thumbnail) {
+      throw new ApiError(500, "Something wend wrong when updating thumbnail.");
+    }
+
+    updatableFields.thumbnail = thumbnail.url;
   }
-
-  const thumbnail = await uploadOnCloudinary(newThumbnailLocalPath);
-
-  if (!thumbnail) {
-    throw new ApiError(500, "Something wend wrong when updating thumbnail.");
-  }
-
-  updatableFields.thumbnail = thumbnail.url;
 
   const oldImageInstance = req.user.thumbnail;
 
   const updateVideoResponse = await VideoModel.findByIdAndUpdate(
-    req.user._id,
+    videoId,
     {
       $set: {
         ...updatableFields,
@@ -57,7 +62,9 @@ const updateVideo = asyncHandler(async (req, res) => {
   );
 
   // delete old image from cloudinary after upload new one
-  await removeCloudinaryFile(oldImageInstance);
+  if (oldImageInstance) {
+    await removeCloudinaryFile(oldImageInstance);
+  }
 
   return res
     .status(200)
