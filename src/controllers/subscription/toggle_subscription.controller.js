@@ -17,6 +17,13 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 
   const { channelId } = req.params;
 
+  const channelObjectId = new mongoose.Types.ObjectId(channelId);
+  const currUserObjectId = new mongoose.Types.ObjectId(req.user._id);
+
+  if (channelObjectId.equals(currUserObjectId)) {
+    throw new ApiError(400, "Cannot perform this operation with your channel");
+  }
+
   if (!channelId) {
     throw new ApiError(400, "ChannelId is required");
   }
@@ -26,29 +33,24 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Channel not found");
   }
 
-  const isSubscribed = await SubscriptionModel.aggregate([
-    {
-      $match: {
-        subscriber: new mongoose.Types.ObjectId(req.user._id),
-      },
-    },
-    {
-      $addFields: {
-        isSubscribed: {
-          $cond: {
-            if: [channelId, "$channel"],
-            then: true,
-            else: false,
-          },
-        },
-      },
-    },
-  ]);
+  const getSubscriptionById = await SubscriptionModel.find({
+    subscriber: currUserObjectId,
+  });
 
-  let subscribedStatus = isSubscribed[0]?.isSubscribed;
+  let isSubscribed;
 
-  if (isSubscribed[0]?.isSubscribed) {
-    await SubscriptionModel.deleteOne({ subscriber: req.user._id });
+  if (getSubscriptionById) {
+    isSubscribed = getSubscriptionById.find((subs) => {
+      console.log(subs.channel.equals(channelObjectId));
+      return channelObjectId.equals(subs.channel);
+    });
+  }
+
+  // console.log({ getSubscriptionById, isSubscribed });
+
+  let subscribedStatus;
+  if (isSubscribed) {
+    await SubscriptionModel.deleteOne({ subscriber: isSubscribed._id });
     subscribedStatus = false;
   } else {
     await SubscriptionModel.create({
@@ -58,9 +60,9 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     subscribedStatus = true;
   }
 
-  return res.status.json(
-    new ApiResponse(200, { subscribedStatus }, "Toggled subscription")
-  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { subscribedStatus }, "Toggled subscription"));
 });
 
 export { toggleSubscription };
