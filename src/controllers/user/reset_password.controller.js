@@ -30,8 +30,8 @@ const resetPassword = asyncHandler(async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   return res
-    .send(200)
-    .json(new ApiResponse(200, {}, "Password resent successfully"));
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password reset successfully"));
 });
 
 export { resetPassword };

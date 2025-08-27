@@ -18,9 +18,9 @@ import { generateAccessAndRefreshToken } from "./login.controller.js";
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
-    req.body.refreshToken ||
+    req.body?.refreshToken ||
     req.header("refreshToken") ||
-    req.cookies.refreshToken;
+    req.cookies?.refreshToken;
 
   if (!incomingRefreshToken) {
     throw new ApiError(401, "Unauthorized request");

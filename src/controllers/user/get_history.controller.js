@@ -8,11 +8,12 @@ const getUserHistory = asyncHandler(async (req, res) => {
 
   /**
      -> match user
-     -> lookup to videos with via watch history 
+     -> lookup to videos via watch history 
      -> lookup sub pipeline and get video author info with owner id
      -> project or filter owner info 
      -> project document and get only - url, thumbnail, duration, title, avatar, author fullname
      */
+
   const histories = await UserModel.aggregate([
     {
       $match: {
@@ -24,7 +25,6 @@ const getUserHistory = asyncHandler(async (req, res) => {
         from: "videos",
         localField: "watchHistory",
         foreignField: "_id",
-        as: "watchHistory",
         pipeline: [
           {
             $lookup: {
@@ -51,6 +51,12 @@ const getUserHistory = asyncHandler(async (req, res) => {
             },
           },
         ],
+        as: "watchHistory",
+      },
+    },
+    {
+      $project: {
+        watchHistory: 1,
       },
     },
   ]);

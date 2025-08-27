@@ -33,16 +33,6 @@ const getChannelProfile = asyncHandler(async (req, res) => {
         localField: "_id",
         foreignField: "channel",
         as: "subscribersArray",
-        pipeline: [
-          {
-            $project: {
-              username: 1,
-              fullname: 1,
-              avatar: 1,
-              coverImage: 1,
-            },
-          },
-        ],
       },
     },
     {
@@ -56,10 +46,10 @@ const getChannelProfile = asyncHandler(async (req, res) => {
     {
       $addFields: {
         subscribersCount: {
-          $count: "subscribersArray",
+          $size: "$subscribersArray",
         },
         subscribedToCount: {
-          $count: "subscribedToArray",
+          $size: "$subscribedToArray",
         },
         isSubscribed: {
           $cond: {
@@ -76,8 +66,8 @@ const getChannelProfile = asyncHandler(async (req, res) => {
         fullname: 1,
         avatar: 1,
         coverImage: 1,
-        subscribers: 1,
-        subscribeTo: 1,
+        subscribersCount: 1,
+        subscribedToCount: 1,
         isSubscribed: 1,
       },
     },

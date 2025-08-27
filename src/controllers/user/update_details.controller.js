@@ -21,7 +21,7 @@ const updateDetails = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
   const updatedField = async (fieldName, value) => {
-    return (updatedUser = await UserModel.findByIdAndUpdate(
+    updatedUser = await UserModel.findByIdAndUpdate(
       userId,
       {
         $set: {
@@ -29,7 +29,9 @@ const updateDetails = asyncHandler(async (req, res) => {
         },
       },
       { new: true } // its return new user object with new data.
-    )).select("-password -refreshToken");
+    ).select("-password -refreshToken");
+
+    return updatedUser;
   };
 
   let updatedUser;

@@ -21,11 +21,12 @@ const updateCoverImage = asyncHandler(async (req, res) => {
   }
   const oldFileUrl = req.user.coverImage; // old file url
 
-  const newCoverImage = await uploadOnCloudinary(localFilePath);
+  let newCoverImage = await uploadOnCloudinary(localFilePath);
+
   if (!newCoverImage) {
     throw new ApiError(
       500,
-      `Something wend wrong when uploading coverImage image`
+      `Something wend wrong while uploading coverImage image`
     );
   }
 
@@ -33,13 +34,15 @@ const updateCoverImage = asyncHandler(async (req, res) => {
     req.user._id,
     {
       $set: {
-        avatar: newCoverImage.url,
+        coverImage: newCoverImage.url,
       },
     },
     { new: true }
   ).select("-password -refreshToken");
 
-  await removeCloudinaryFile(oldFileUrl);
+  if (oldFileUrl) {
+    await removeCloudinaryFile(oldFileUrl);
+  }
 
   res.status(200).json(new ApiResponse(200, { newUrl: user.coverImage }));
 });
