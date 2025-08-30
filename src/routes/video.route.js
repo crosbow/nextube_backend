@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { deleteVideo } from "../controllers/video/delete_video.controller.js";
-import { getVideo } from "../controllers/video/getVideo.controller.js";
-import { getVideos } from "../controllers/video/getVideos.controller.js";
-import { publishVideo } from "../controllers/video/publishVideo.controller.js";
+import { getVideo } from "../controllers/video/get_video.controller.js";
+import { getVideos } from "../controllers/video/get_videos.controller.js";
+import { publishVideo } from "../controllers/video/publish_video.controller.js";
 import { togglePublishStatus } from "../controllers/video/toggle_publish_status.controller.js";
 import { updateVideo } from "../controllers/video/update_video.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
