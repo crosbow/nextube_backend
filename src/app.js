@@ -21,6 +21,7 @@ app.use(cookieParser()); // Allows read cookies sent by the client and also send
 // import routes
 import authRouter from "./routes/auth.route.js";
 import commentRouter from "./routes/comment.route.js";
+import likeRouter from "./routes/like.route.js";
 import subscriptionSchema from "./routes/subscription.route.js";
 import userRouter from "./routes/user.route.js";
 import videoRouter from "./routes/video.route.js";
@@ -31,6 +32,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/videos", videoRouter);
 app.use("/api/v1/subscription", subscriptionSchema);
 app.use("/api/v1/comment", commentRouter);
+app.use("/api/v1/like", likeRouter);
 
 // http://localhost:8000/api/v1/auth
 
