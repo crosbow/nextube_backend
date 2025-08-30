@@ -33,36 +33,28 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Channel not found");
   }
 
-  const getSubscriptionById = await SubscriptionModel.find({
+  let isSubscribed = await SubscriptionModel.findOne({
     subscriber: currUserObjectId,
+    channel: channelObjectId,
   });
 
-  let isSubscribed;
-
-  if (getSubscriptionById) {
-    isSubscribed = getSubscriptionById.find((subs) => {
-      console.log(subs.channel.equals(channelObjectId));
-      return channelObjectId.equals(subs.channel);
+  if (!isSubscribed) {
+    isSubscribed = await SubscriptionModel.create({
+      subscriber: currUserObjectId,
+      channel: channelObjectId,
     });
-  }
-
-  // console.log({ getSubscriptionById, isSubscribed });
-
-  let subscribedStatus;
-  if (isSubscribed) {
-    await SubscriptionModel.deleteOne({ subscriber: isSubscribed._id });
-    subscribedStatus = false;
   } else {
-    await SubscriptionModel.create({
-      subscriber: req.user._id,
-      channel: channelId,
+    isSubscribed = await SubscriptionModel.deleteOne({
+      subscriber: currUserObjectId,
+      channel: channelObjectId,
     });
-    subscribedStatus = true;
   }
+
+  console.log(isSubscribed);
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { subscribedStatus }, "Toggled subscription"));
+    .json(new ApiResponse(200, { isSubscribed }, "Toggled subscription"));
 });
 
 export { toggleSubscription };
