@@ -18,17 +18,20 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All params is required");
   }
 
-  const removeVideo = await PlaylistModel.findByIdAndUpdate(
-    playlistId,
-    {
-      $pull: { videos: new mongoose.Types.ObjectId(videoId) },
-    },
-    { new: true }
-  );
+  const removeVideo = await PlaylistModel.findByIdAndUpdate(playlistId, {
+    $pull: { videos: new mongoose.Types.ObjectId(videoId) },
+  });
+  console.log(removeVideo);
+
+  if (!removeVideo.videos.length) {
+    throw new ApiError(404, "Video doesn't exist");
+  }
+
+  const playlist = await PlaylistModel.findById(playlistId);
 
   return res
-    .status(201)
-    .json(200, new ApiResponse(200, removeVideo, "Added video in playlist."));
+    .status(200)
+    .json(new ApiResponse(200, playlist, "Removed video from playlist."));
 });
 
 export { removeVideoFromPlaylist };

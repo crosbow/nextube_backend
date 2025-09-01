@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { PlaylistModel } from "../../models/playlist.model.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
@@ -12,7 +13,34 @@ const getPlaylist = asyncHandler(async (req, res) => {
 
   const { playlistId } = req.params;
 
-  const playlist = await PlaylistModel.findById(playlistId);
+  const playlist = await PlaylistModel.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(playlistId),
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "videos",
+        foreignField: "_id",
+        as: "videos",
+        pipeline: [
+          {
+            $project: {
+              title: 1,
+              description: 1,
+              videoUrl: 1,
+              thumbnail: 1,
+              duration: 1,
+              createdAT: 1,
+              views: 1,
+            },
+          },
+        ],
+      },
+    },
+  ]);
 
   if (!playlist) {
     throw new ApiError(404, "Playlist not found");

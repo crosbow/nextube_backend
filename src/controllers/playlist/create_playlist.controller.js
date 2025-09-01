@@ -1,5 +1,6 @@
 import { PlaylistModel } from "../../models/playlist.model.js";
 import { ApiError } from "../../utils/ApiError.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 
 const createPlaylist = asyncHandler(async (req, res) => {
@@ -22,7 +23,9 @@ const createPlaylist = asyncHandler(async (req, res) => {
     description,
   });
 
-  return res.status(200).json(200, newPlaylist, "Playlist created");
+  return res
+    .status(200)
+    .json(new ApiResponse(200, newPlaylist, "Playlist created"));
 });
 
 export { createPlaylist };

@@ -22,7 +22,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
   const video = await VideoModel.findById(videoId);
   const playlist = await PlaylistModel.findById(playlistId);
 
-  if (!video || playlist) {
+  if (!video || !playlist) {
     throw new ApiError(400, "Video or playlist might not exist");
   }
 
@@ -35,8 +35,8 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
   );
 
   return res
-    .status(201)
-    .json(200, new ApiResponse(200, addVideo, "Added video in playlist."));
+    .status(200)
+    .json(new ApiResponse(200, addVideo, "Added video in playlist."));
 });
 
 export { addVideoToPlaylist };

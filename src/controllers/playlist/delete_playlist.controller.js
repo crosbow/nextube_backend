@@ -1,7 +1,7 @@
-import { PlaylistModel } from "../../models/playlist.model";
-import { ApiError } from "../../utils/ApiError";
-import { ApiResponse } from "../../utils/ApiResponse";
-import { asyncHandler } from "../../utils/asyncHandler";
+import { PlaylistModel } from "../../models/playlist.model.js";
+import { ApiError } from "../../utils/ApiError.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
 
 const deletePlaylist = asyncHandler(async (req, res) => {
   /*
@@ -14,11 +14,13 @@ const deletePlaylist = asyncHandler(async (req, res) => {
 
   const deletedPlaylist = await PlaylistModel.findByIdAndDelete(playlistId);
 
-  if (!deletePlaylist) {
-    throw new ApiError(400, "playlistId is invalid");
+  if (!deletedPlaylist) {
+    throw new ApiError(400, "playlist not found");
   }
 
-  return req.status(200).json(new ApiResponse(200, deletedPlaylist));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "Playlist Deleted Successfully"));
 });
 
 export { deletePlaylist };
