@@ -32,27 +32,24 @@ const deleteVideo = asyncHandler(async (req, res) => {
   }
 
   const videoObjectId = new mongoose.Types.ObjectId(video._id);
-  const removeHistory = await UserModel.updateMany(
+  await UserModel.updateMany(
     {
       watchHistory: videoObjectId,
     },
     { $pull: { watchHistory: videoObjectId } }
   );
 
-  const removeLikes = await LikeModel.deleteMany({ video: videoObjectId });
-  const removeComments = await CommentModel.deleteMany({
+  await LikeModel.deleteMany({ video: videoObjectId });
+  await CommentModel.deleteMany({
     video: videoObjectId,
   });
 
   const thumbnail = video.thumbnail;
   const videoUrl = video.videoUrl;
-  const removeVideo = await VideoModel.findByIdAndDelete(videoObjectId);
-
-  // TODO: back again
-  // console.log(removeLikes, removeHistory, removeComments, removeVideo);
+  await VideoModel.findByIdAndDelete(videoObjectId);
 
   await removeCloudinaryFile(thumbnail);
-  await removeCloudinaryFile(videoUrl);
+  await removeCloudinaryFile(videoUrl, "video");
 
   return res
     .status(200)
