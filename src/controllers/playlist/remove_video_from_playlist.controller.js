@@ -21,7 +21,6 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   const removeVideo = await PlaylistModel.findByIdAndUpdate(playlistId, {
     $pull: { videos: new mongoose.Types.ObjectId(videoId) },
   });
-  console.log(removeVideo);
 
   if (!removeVideo.videos.length) {
     return res.status(404).json(new ApiError(404, "Video doesn't exist"));

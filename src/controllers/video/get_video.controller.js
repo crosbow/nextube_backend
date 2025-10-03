@@ -10,7 +10,8 @@ const getVideo = asyncHandler(async (req, res) => {
     -> return full video info 
     */
 
-  const { videoId } = req.query;
+  console.log("videoId");
+  const videoId = req.params.videoId;
 
   const video = await VideoModel.aggregate([
     {

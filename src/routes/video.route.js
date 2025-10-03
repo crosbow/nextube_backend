@@ -27,7 +27,7 @@ router.route("/upload").post(
 );
 
 // /watch?videoId=ID
-router.route("/watch").get(verifyJWT, getVideo);
+router.route("/watch/:videoId").get(verifyJWT, getVideo);
 router.route("/toggle-publish/:videoId").patch(verifyJWT, togglePublishStatus);
 router.route("/delete/:videoId").delete(verifyJWT, deleteVideo);
 router
