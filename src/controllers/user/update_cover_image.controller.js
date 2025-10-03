@@ -17,7 +17,7 @@ const updateCoverImage = asyncHandler(async (req, res) => {
   const localFilePath = req.file?.path; // only comes 1 file
 
   if (!localFilePath) {
-    throw new ApiError(400, "cover image is required");
+    return res.status(400).json(new ApiError(400, "cover image is required"));
   }
   const oldFileUrl = req.user.coverImage; // old file url
 

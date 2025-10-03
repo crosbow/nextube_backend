@@ -17,7 +17,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
   const user = await UserModel.findById(userId);
 
   if (!user) {
-    throw new ApiError(400, "User id is required");
+    return res.status(400).json(new ApiError(400, "User id is required"));
   }
 
   const tweets = await TweetModel.find({

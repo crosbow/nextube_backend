@@ -21,16 +21,20 @@ const toggleSubscription = asyncHandler(async (req, res) => {
   const currUserObjectId = new mongoose.Types.ObjectId(req.user._id);
 
   if (channelObjectId.equals(currUserObjectId)) {
-    throw new ApiError(400, "Cannot perform this operation with your channel");
+    return res
+      .status(400)
+      .json(
+        new ApiError(400, "Cannot perform this operation with your channel")
+      );
   }
 
   if (!channelId) {
-    throw new ApiError(400, "ChannelId is required");
+    return res.status(400).json(new ApiError(400, "ChannelId is required"));
   }
 
   const channel = await UserModel.findById(channelId);
   if (!channel) {
-    throw new ApiError(404, "Channel not found");
+    return res.status(404).json(new ApiError(404, "Channel not found"));
   }
 
   let isSubscribed = await SubscriptionModel.findOne({
@@ -49,8 +53,6 @@ const toggleSubscription = asyncHandler(async (req, res) => {
       channel: channelObjectId,
     });
   }
-
-  console.log(isSubscribed);
 
   return res
     .status(200)

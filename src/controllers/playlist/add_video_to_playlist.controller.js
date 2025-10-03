@@ -16,14 +16,16 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
   const { videoId, playlistId } = req.params;
 
   if (!videoId || !playlistId) {
-    throw new ApiError(400, "All params is required");
+    return res.status(400).json(new ApiError(400, "All params is required"));
   }
 
   const video = await VideoModel.findById(videoId);
   const playlist = await PlaylistModel.findById(playlistId);
 
   if (!video || !playlist) {
-    throw new ApiError(400, "Video or playlist might not exist");
+    return res
+      .status(400)
+      .json(new ApiError(400, "Video or playlist might not exist"));
   }
 
   const addVideo = await PlaylistModel.findByIdAndUpdate(

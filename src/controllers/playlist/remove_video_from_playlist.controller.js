@@ -15,7 +15,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   const { videoId, playlistId } = req.params;
 
   if (!videoId || !playlistId) {
-    throw new ApiError(400, "All params is required");
+    return res.status(400).json(new ApiError(400, "All params is required"));
   }
 
   const removeVideo = await PlaylistModel.findByIdAndUpdate(playlistId, {
@@ -24,7 +24,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   console.log(removeVideo);
 
   if (!removeVideo.videos.length) {
-    throw new ApiError(404, "Video doesn't exist");
+    return res.status(404).json(new ApiError(404, "Video doesn't exist"));
   }
 
   const playlist = await PlaylistModel.findById(playlistId);

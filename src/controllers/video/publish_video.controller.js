@@ -17,7 +17,7 @@ const publishVideo = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
 
   if (!title || !description) {
-    throw new ApiError(400, "All field is required");
+    return res.status(400).json(new ApiError(400, "All field is required"));
   }
 
   let thumbnailLocalPath;
@@ -35,10 +35,10 @@ const publishVideo = asyncHandler(async (req, res) => {
   }
 
   if (!thumbnailLocalPath) {
-    throw new ApiError(400, "Thumbnail is required");
+    return res.status(400).json(new ApiError(400, "Thumbnail is required"));
   }
   if (!videoLocalPath) {
-    throw new ApiError(400, "Video is required");
+    return res.status(400).json(new ApiError(400, "Video is required"));
   }
 
   const video = await uploadOnCloudinary(videoLocalPath);

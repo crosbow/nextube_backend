@@ -33,7 +33,9 @@ const updateVideo = asyncHandler(async (req, res) => {
   const newThumbnailLocalPath = req.file?.path;
 
   if (!title && !description && !newThumbnailLocalPath) {
-    throw new ApiError(400, "At least one field required");
+    return res
+      .status(400)
+      .json(new ApiError(400, "At least one field required"));
   }
 
   let thumbnail;

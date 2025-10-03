@@ -43,7 +43,7 @@ const getPlaylist = asyncHandler(async (req, res) => {
   ]);
 
   if (!playlist) {
-    throw new ApiError(404, "Playlist not found");
+    return res.status(404).json(new ApiError(404, "playlist not found"));
   }
 
   return res

@@ -22,13 +22,13 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
   const { videoId } = req.params;
   if (!videoId) {
-    throw new ApiError(400, "Video id is required");
+    return res.status(400).json(new ApiError(400, "Video id is required"));
   }
 
   const video = await VideoModel.findById(new mongoose.Types.ObjectId(videoId));
 
   if (!video) {
-    throw new ApiError(400, "Video not found");
+    return res.status(400).json(new ApiError(400, "Video not found"));
   }
 
   const videoObjectId = new mongoose.Types.ObjectId(video._id);

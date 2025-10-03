@@ -16,13 +16,13 @@ const addComment = asyncHandler(async (req, res) => {
   const commenterId = req.user._id;
 
   if (!contend.trim || !videoId) {
-    throw new ApiError(400, "All field is required");
+    return res.status(400).json(new ApiError(400, "All field is required"));
   }
 
   const isVideoExist = await VideoModel.findById(videoId);
 
   if (!isVideoExist) {
-    throw new ApiError(404, "Video not found");
+    return res.status(404).json(new ApiError(404, "Video not found"));
   }
 
   const comment = await CommentModel.create({

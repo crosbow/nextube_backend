@@ -16,7 +16,9 @@ const updateTweet = asyncHandler(async (req, res) => {
   const { newContend } = req.body;
 
   if (!newContend.trim()) {
-    throw new ApiError(400, "new contend should not be empty");
+    return res
+      .status(404)
+      .json(new ApiError(404, "new contend should not be empty"));
   }
 
   const updatedTweet = await TweetModel.updateOne(
@@ -29,7 +31,7 @@ const updateTweet = asyncHandler(async (req, res) => {
   );
 
   if (!updatedTweet?.modifiedCount) {
-    throw new ApiError(404, "Invalid tweet id");
+    return res.status(404).json(new ApiError(404, "Invalid tweet id"));
   }
 
   return res

@@ -18,13 +18,13 @@ const getVideoComment = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
 
   if (!videoId) {
-    throw new ApiError(400, "video param is required");
+    return res.status(400).json(new ApiError(400, "video param is required"));
   }
 
   const isVideoExist = await VideoModel.findById(videoId);
 
   if (!isVideoExist) {
-    throw new ApiError(404, "Video not found");
+    return res.status(404).json(new ApiError(404, "Video not found"));
   }
 
   const options = {

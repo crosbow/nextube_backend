@@ -16,13 +16,15 @@ const getChannelSubscribers = asyncHandler(async (req, res) => {
   const { channelId } = req.params;
 
   if (!channelId) {
-    throw new ApiError(400, "Channel id param is required");
+    return res
+      .status(404)
+      .json(new ApiError(404, "Channel id param is required"));
   }
 
   const channel = await UserModel.findById(channelId);
 
   if (!channel) {
-    throw new ApiError(404, "Channel not found");
+    return res.status(404).json(new ApiError(404, "Channel not found"));
   }
 
   const subscribers = await SubscriptionModel.aggregate([

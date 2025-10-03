@@ -74,7 +74,7 @@ const getChannelProfile = asyncHandler(async (req, res) => {
   ]);
 
   if (!channelProfileInfo.length) {
-    throw new ApiError(404, "User not found");
+    return res.status(404).json(new ApiError(404, "User not found"));
   }
 
   return res

@@ -21,7 +21,9 @@ const registerUser = asyncHandler(async (req, res) => {
   );
 
   if (emptyField) {
-    throw new ApiError(400, `"${emptyField}" is required`);
+    return res
+      .status(400)
+      .json(new ApiError(400, `"${emptyField}" is required`));
   }
 
   const existedUser = await UserModel.findOne({
@@ -29,7 +31,9 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (existedUser) {
-    throw new ApiError(409, `"User already exist with the username or email"`);
+    return res
+      .status(409)
+      .json(new ApiError(409, "User already exist with the username or email"));
   }
 
   let avatarLocalFilePath;
@@ -52,7 +56,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   if (!avatarLocalFilePath) {
-    throw new ApiError(400, `avatar file is required`);
+    return res.status(400).json(new ApiError(400, `avatar file is required`));
   }
 
   const avatar = await uploadOnCloudinary(avatarLocalFilePath);

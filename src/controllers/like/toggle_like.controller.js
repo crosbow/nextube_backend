@@ -16,7 +16,7 @@ const toggleLike = asyncHandler(async (req, res) => {
   const { likeType, likedContent } = req.body;
 
   if (!likeType.trim() && !likedContent.trim()) {
-    throw new ApiError(400, "All field is required");
+    return res.status(400).json(new ApiError(400, "All field is required"));
   }
 
   let result;

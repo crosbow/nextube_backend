@@ -15,13 +15,15 @@ const updateVideoComment = asyncHandler(async (req, res) => {
   const { newContend } = req.body;
 
   if (!videoId.trim() || !newContend.trim()) {
-    throw new ApiError(400, "videoId and newContend field is required");
+    return res
+      .status(400)
+      .json(new ApiError(400, "videoId and newContend field is required"));
   }
 
   const isCommentExist = await CommentModel.findById(videoId);
 
   if (!isCommentExist) {
-    throw new ApiError(404, "Comment is not exist");
+    return res.status(404).json(new ApiError(404, "Comment is not exist"));
   }
 
   const updatedComment = await CommentModel.findByIdAndUpdate(

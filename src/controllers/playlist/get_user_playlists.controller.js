@@ -16,7 +16,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
   const user = await UserModel.findById(userId);
 
   if (!user) {
-    throw new ApiError(404, "User not found");
+    return res.status(404).json(new ApiError(404, "User not found"));
   }
 
   const playlists = await PlaylistModel.find({

@@ -39,11 +39,13 @@ const loginUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
   if (!email && !username) {
-    throw new ApiError(400, "Please provide email or username");
+    return res
+      .status(400)
+      .json(new ApiError(400, "Please provide email or username"));
   }
 
   if (!password) {
-    throw new ApiError(400, "Password is required!");
+    return res.status(400).json(new ApiError(400, "Password is required!"));
   }
 
   const user = await UserModel.findOne({
@@ -51,13 +53,17 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 
   if (!user) {
-    throw new ApiError(404, "User not found with this credential");
+    return res
+      .status(404)
+      .json(new ApiError(404, "User not found with this credential"));
   }
 
   const isPasswordValid = await user.isPasswordCorrect(password);
 
   if (!isPasswordValid) {
-    throw new ApiError(400, "User not found with this credential");
+    return res
+      .status(404)
+      .json(new ApiError(400, "User not found with this credential"));
   }
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(

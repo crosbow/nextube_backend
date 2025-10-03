@@ -15,7 +15,7 @@ const updateDetails = asyncHandler(async (req, res) => {
   const { fullname, email } = req.body;
 
   if (!fullname && !email) {
-    throw new ApiError(400, "all fields are required");
+    return res.status(400).json(new ApiError(400, "all fields are required"));
   }
 
   const userId = req.user._id;

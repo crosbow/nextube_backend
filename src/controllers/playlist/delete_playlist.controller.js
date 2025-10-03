@@ -15,7 +15,7 @@ const deletePlaylist = asyncHandler(async (req, res) => {
   const deletedPlaylist = await PlaylistModel.findByIdAndDelete(playlistId);
 
   if (!deletedPlaylist) {
-    throw new ApiError(400, "playlist not found");
+    return res.status(400).json(new ApiError(400, "playlist not found"));
   }
 
   return res

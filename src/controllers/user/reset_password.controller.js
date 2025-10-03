@@ -15,7 +15,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
   if (oldPassword === newPassword) {
-    throw new ApiError(400, "Please enter new password");
+    return res.status(400).json(new ApiError(400, "Please enter new password"));
   }
 
   const user = await UserModel.findById(req.user._id);
@@ -23,7 +23,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   const isPasswordMatched = await user.isPasswordCorrect(oldPassword);
 
   if (!isPasswordMatched) {
-    throw new ApiError(400, "Password is incorrect");
+    return res.status(400).json(new ApiError(400, "Password is incorrect"));
   }
 
   user.password = newPassword;

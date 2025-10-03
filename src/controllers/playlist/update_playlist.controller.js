@@ -17,10 +17,14 @@ const updatePlaylist = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
 
   if (!name && !description) {
-    throw new ApiError(
-      400,
-      "Field name or description is required for this operation"
-    );
+    return res
+      .status(400)
+      .json(
+        new ApiError(
+          400,
+          "Field name or description is required for this operation"
+        )
+      );
   }
 
   const nonEmptyFields = {};

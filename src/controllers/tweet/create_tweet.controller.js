@@ -15,7 +15,7 @@ const createTweet = asyncHandler(async (req, res) => {
   const { contend } = req.body;
 
   if (!contend.trim()) {
-    throw new ApiError(400, "Contend is required!");
+    return res.status(400).json(new ApiError(400, "Contend is required!"));
   }
 
   const tweet = await TweetModel.create({
